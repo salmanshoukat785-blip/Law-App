@@ -12,6 +12,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Unzip project parts
+        run: |
+          for z in $(ls PakistanLaws-Part*.zip 2>/dev/null | sort -V); do
+            echo "Unzipping $z"
+            unzip -o "$z" -x ".github/*"
+          done
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
