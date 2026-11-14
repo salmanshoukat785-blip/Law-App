@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "635378204235",
+    "project_id": "pakistan-laws",
+    "storage_bucket": "pakistan-laws.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635378204235:android:11261907dbdcde15c417ce",
+        "android_client_info": {
+          "package_name": "com.pakistanlaws.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEFmaKEhzhuc6LnuLSXoSP62bOxJ4pKvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
