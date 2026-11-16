@@ -14,10 +14,23 @@ jobs:
 
       - name: Unzip project parts
         run: |
-          for z in $(ls PakistanLaws-Part*.zip 2>/dev/null | sort -V); do
-            echo "Unzipping $z"
+          echo "Files in the repository root:"
+          ls -la
+          if ! ls PakistanLaws-Part*.zip >/dev/null 2>&1; then
+            echo "ERROR: no PakistanLaws-Part*.zip files were found in the repository root."
+            exit 1
+          fi
+          ls PakistanLaws-Part*.zip | sort -V | while IFS= read -r z; do
+            echo "Unzipping: $z"
             unzip -o "$z" -x ".github/*"
           done
+          echo "Project folder after unzip:"
+          ls -la app || true
+          if [ ! -f app/build.gradle.kts ]; then
+            echo "ERROR: app/build.gradle.kts is missing."
+            echo "One of the earlier zips (PakistanLaws-Part2.zip or PakistanLaws-Part3.zip) is not in the repository root, or its name was changed."
+            exit 1
+          fi
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
