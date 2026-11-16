@@ -24,11 +24,8 @@ jobs:
             echo "Unzipping: $z"
             unzip -o "$z" -x ".github/*"
           done
-          echo "Project folder after unzip:"
-          ls -la app || true
           if [ ! -f app/build.gradle.kts ]; then
-            echo "ERROR: app/build.gradle.kts is missing."
-            echo "One of the earlier zips (PakistanLaws-Part2.zip or PakistanLaws-Part3.zip) is not in the repository root, or its name was changed."
+            echo "ERROR: app/build.gradle.kts is missing. A PakistanLaws-Part zip is missing or was renamed."
             exit 1
           fi
 
@@ -44,7 +41,23 @@ jobs:
           gradle-version: 8.9
 
       - name: Build debug APK
-        run: gradle assembleDebug --stacktrace
+        run: |
+          set -eo pipefail
+          gradle assembleDebug --stacktrace 2>&1 | tee build.log
+
+      - name: Show the errors
+        if: failure()
+        run: |
+          echo "---- Compile errors (lines starting with e:) ----"
+          grep -E "^e: " build.log | head -40 || true
+          grep -E "^e: " build.log | head -8 | sed -E 's#file:///home/runner/work/[^/]+/[^/]+/##' | while IFS= read -r line; do
+            echo "::error::${line}"
+          done
+          echo "---- What went wrong ----"
+          grep -A10 "What went wrong" build.log | head -30 || true
+          grep -A6 "What went wrong" build.log | head -8 | while IFS= read -r line; do
+            echo "::error::${line}"
+          done
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
